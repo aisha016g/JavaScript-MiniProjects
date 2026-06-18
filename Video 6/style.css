@@ -1,0 +1,28 @@
+#head{
+    background-color: yellow;
+    color: blue;
+}
+#head2{
+    color: aqua;
+}
+button{
+    background-color: blue;
+    color: white;
+}
+body{
+    background-color: pink;
+}
+.heading-class{
+    background-color:green;
+}
+hr{
+    background-color:black;
+}
+.box{
+    height: 100px;
+    width: 100px;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+    background-color: aquamarine;
+}
