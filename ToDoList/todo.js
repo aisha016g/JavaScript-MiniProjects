@@ -2,110 +2,149 @@ const cont = document.querySelector("#input-task");
 const addTask = document.querySelector("#add-task");
 const pendingList = document.querySelector("#pending ul");
 const completedList = document.querySelector("#finished ul");
-const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const pending_cnt = document.querySelector("#incomplete");
+const complete_cnt = document.querySelector("#completed");
 
+const tasksArr = loadTasks();
 
-cont.addEventListener("keydown",(event) => {
-    if(event.key === "Enter"){
+const updateCnt = () =>{
+    const completedTasks = tasksArr.filter(task => task.completed);
+    const pendingTasks = tasksArr.filter(task => !task.completed);
+    pending_cnt.innerText = `Pending Tasks (${pendingTasks.length})`;
+    complete_cnt.innerText = `Finished Tasks (${completedTasks.length})`;
+}
+// Event Listeners
+cont.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
         addTask.click();
-    }       
-});
-
-addTask.addEventListener("click",()=>{
-    if(cont.value.trim() != "" ){
-
-    createTask(cont.value.trim());
-
-    
-    tasks.push(cont.value.trim());
-    
-    localStorage.setItem("tasks",JSON.stringify
-    (tasks));
-    
-    cont.value="";
     }
 });
 
-const createTask = (taskValue) =>{
-    const taskCard = document.createElement("div");
-    taskCard.classList.add("task-card");   
+addTask.addEventListener("click", () => {
+
+    const value = cont.value.trim();
+
+    if (value === "") return;
+
+    const newTask = {
+        text: value,
+        completed: false
+    };
     
+    tasksArr.push(newTask);
+    saveTasks();
+    
+    updateCnt();
+    createTask(newTask);
+
+    cont.value = "";
+});
+
+// Local Storage
+function loadTasks() {
+    return JSON.parse(localStorage.getItem("tasks")) || [];
+}
+
+function saveTasks() {
+    localStorage.setItem("tasks",JSON.stringify(tasksArr));
+}
+
+// Task Creation
+function createTask(task) {
+
+    const taskCard = document.createElement("div");
+    taskCard.classList.add("task-card");
+
     const taskText = document.createElement("span");
     taskText.classList.add("task-text");
-    
+    taskText.textContent = task.text;
+
     const action = document.createElement("div");
     action.classList.add("action");
-    
+
     const del = document.createElement("button");
     del.classList.add("del-btn");
-    
+    del.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
     const completed = document.createElement("button");
     completed.classList.add("comp-btn");
-    
+    completed.innerHTML = '<i class="fa-solid fa-check"></i>';
+
     const edit = document.createElement("button");
     edit.classList.add("edit-btn");
+    edit.innerHTML = '<i class="fa-solid fa-pen"></i>';
 
-    taskText.append(taskValue);
-    
-    taskCard.append(taskText);
-    taskCard.append(action);
-    
     action.append(del);
     action.append(completed);
     action.append(edit);
 
-    del.innerHTML = '<i class="fa-solid fa-trash"></i>';
-    completed.innerHTML = '<i class="fa-solid fa-check"></i>';
-    edit.innerHTML = '<i class="fa-solid fa-pen"></i>';
-    
-    pendingList.append(taskCard);
-    console.log(pendingList);
+    taskCard.append(taskText);
+    taskCard.append(action);
 
-    del.addEventListener("click",() =>{
-        const delTask = tasks.indexOf(taskValue);
-        
-        if(delTask !== -1){
-            tasks.splice(delTask,1);
+    // Initial Placement
+
+    if (task.completed) {
+        completedList.append(taskCard);
+        taskText.classList.add("finished");
+    } else {
+        pendingList.append(taskCard);
+    }
+
+    // Delete
+
+    del.addEventListener("click", () => {
+
+        const idx = tasksArr.indexOf(task);
+
+        if (idx !== -1) {
+            tasksArr.splice(idx, 1);
+            saveTasks();
+            updateCnt();
+
         }
-        localStorage.setItem("tasks",JSON.stringify(tasks));
-        
+
         taskCard.remove();
     });
-    
-    completed.addEventListener("click",() =>{
-        completedList.append(taskCard);
+
+    // Complete Toggle
+
+    completed.addEventListener("click", () => {
+        task.completed = !task.completed;
+        if (task.completed) {
+            completedList.append(taskCard);
+            taskText.classList.add("finished");
+        } else {
+            pendingList.append(taskCard);
+            taskText.classList.remove("finished");
+        }
+        saveTasks();
+    updateCnt();
     });
-    
-    edit.addEventListener("click",() =>{
-        const newText = prompt();
-        if(newText != null && newText.trim() != "")
-        {
-            const idx = tasks.indexOf(taskValue); 
-            taskText.innerText = newText.trim();
-            tasks.splice(idx,1,newText);
-            localStorage.setItem("tasks",JSON.stringify(tasks));
+
+    // Edit
+
+    edit.addEventListener("click", () => {
+        const newText = prompt("Edit task:", task.text);
+        if (newText && newText.trim() !== "") {
+            task.text = newText.trim();
+            taskText.textContent = task.text;
+            saveTasks();
         }
     });
 
-     let visible = false;
-    taskCard.addEventListener("click",() =>{
-        if(!visible)
-            {
-                console.log("visible");
-                action.style.display = "flex";
-                visible = true;
-            }
-            else
-                {
-                    console.log("hidden");
-                    action.style.display = "none";
-                    visible = false;
-                }
-            });
+    // Show / Hide Actions
 
+    let visible = false;
+    taskCard.addEventListener("click", () => {
+        visible = !visible;
+        action.style.display =visible ? "flex" : "none";
+    });
 }
 
-// localStorage.setItem("test","hello");
-tasks.forEach((task) =>{
+
+tasksArr.forEach(task => {
     createTask(task);
-})
+    
+});
+updateCnt();
+

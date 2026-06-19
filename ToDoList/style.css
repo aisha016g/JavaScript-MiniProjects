@@ -1,69 +1,121 @@
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body{
-    background-color: palevioletred;
+    background-color: #ffd6ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 h2{
+    width: 100%;
     text-align: center;
-    margin-top: 1rem;
+    color: #ade8f4;
+    background-color: #03045e;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 35px;
 }
 
-
-.container i{
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
     margin-top: 1.5rem;
-}
-i:hover{
-  cursor:pointer;  
 }
 
 input{
-    margin: 1rem;
-    height: 2rem;
-    width: 15rem;
-    opacity: .5;
+    height: 3.5rem;
+    width: 26rem;
     border: 2px solid black;
-    padding: .3rem;
-}
-.container {
-    display: flex;
-    gap: .2rem;
+    padding: .5rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    background-color: #f48498;
 }
 
+.container i{
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
 
+.container i:hover{
+    transform: scale(1.1);
+}
+
+#incomplete,
+#completed{
+    background-color: #fee440;
+    border: 1px solid black;
+    width: 25rem;
+    margin-top: 2rem;
+    padding: .8rem;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+#pending,
+#finished{
+    width: 25rem;
+}
 
 .task-card{
-    border: 1px solid black;
-    height: 2rem;
-    width: 15rem;
-    gap: 2rem;
-    margin: 1rem;
-    padding: .5rem;
-    border-radius: 5px;
-    list-style: none;
-    text-align: center;
-    /* display: flex; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    min-height: 3rem;
+
+    margin-top: 1rem;
+    padding: .8rem;
+
+    border: 1px solid #555;
+    border-radius: 8px;
+
+    background-color: #c8b6ff;
+
+    transition: 0.2s ease;
 }
 
-/* .task-text{
-    height: 2rem;
-    width: 15rem;
-    gap: 2rem;
-    margin: 1rem;
-    padding: .5rem;
-} */
-
-#finished,#pending{
-    margin: 1rem;
-}
-
-button:hover,.task-card:hover{
+.task-card:hover{
+    transform: scale(1.02);
     cursor: pointer;
 }
 
+.task-text{
+    font-size: 1.1rem;
+}
+
 .action{
-    display:none;
+    display: none;
+    gap: .4rem;
+}
+
+.action button{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ff99c8;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.action button:hover{
+    transform: scale(1.1);
+}
+
+.finished{
+    text-decoration: line-through;
+    opacity: 0.7;
 }
